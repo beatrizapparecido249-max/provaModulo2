@@ -6,13 +6,59 @@
   <title>Gestão Financeira</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Biblioteca para Geração de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+
+  <!-- INTRO ANIMADA DO LOGOTIPO MELHORADA -->
+  <div id="intro-overlay">
+    <div class="intro-logo-container">
+      <!-- Círculo de Brilho de Fundo -->
+      <div class="intro-glow-bg"></div>
+
+      <!-- Sifrões Orbitando/Animados em Diversas Posições -->
+      <span class="symbol-floating sym-1">$</span>
+      <span class="symbol-floating sym-2">$</span>
+      <span class="symbol-floating sym-3">$</span>
+      <span class="symbol-floating sym-4">$</span>
+      <span class="symbol-floating sym-5">$</span>
+      <span class="symbol-floating sym-6">$</span>
+      <span class="symbol-floating sym-7">$</span>
+      <span class="symbol-floating sym-8">$</span>
+
+      <!-- Partículas Cintilantes -->
+      <span class="sparkle sp-1">✦</span>
+      <span class="sparkle sp-2">✦</span>
+      <span class="sparkle sp-3">✦</span>
+
+      <div class="intro-text-box">
+        <h1 class="intro-title">Gestão Financeira</h1>
+        <p class="intro-subtitle">SISTEMA INTELIGENTE DE CONTROLE</p>
+      </div>
+    </div>
+  </div>
+
   <div class="app-container">
     <header class="app-header">
       <h1>💰 Gestão Financeira</h1>
+      <div class="header-actions">
+        <!-- Seletor de Conversão de Moeda -->
+        <div class="currency-selector">
+          <label for="moeda-select">Moeda:</label>
+          <select id="moeda-select">
+            <option value="BRL" selected>BRL (R$)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+        <!-- Botão de exportação de PDF em Tabela -->
+        <button id="btn-exportar-pdf-geral" class="btn-secondary">📄 Exportar Relatório PDF</button>
+      </div>
     </header>
 
+    <!-- CARDS DE RESUMO -->
     <section class="summary-grid">
       <div class="summary-card card-receita">
         <span class="card-label">RECEITAS</span>
@@ -22,23 +68,60 @@
         <span class="card-label">DESPESAS</span>
         <h2 id="total-despesas">R$ 0,00</h2>
       </div>
+      <div class="summary-card card-cofre">
+        <span class="card-label">NO COFRE 🔒</span>
+        <h2 id="total-cofre">R$ 0,00</h2>
+      </div>
       <div class="summary-card card-saldo">
-        <span class="card-label">SALDO TOTAL</span>
+        <span class="card-label">SALDO DISPONÍVEL</span>
         <h2 id="saldo-total">R$ 0,00</h2>
       </div>
     </section>
 
+    <!-- MÓDULO DO COFRE VIRTUAL -->
+    <section class="content-card cofre-card">
+      <h2>🔒 Cofre Financeiro (Guardar Dinheiro)</h2>
+      <div class="cofre-container">
+        <div class="cofre-info">
+          <p>Guarde fundos do seu saldo livre para criar reservas de emergência ou investimentos.</p>
+        </div>
+        <form id="cofre-form" class="cofre-form-grid">
+          <div class="form-group">
+            <label for="valor-cofre">Valor</label>
+            <input type="text" id="valor-cofre" inputmode="numeric" placeholder="R$ 0,00" required />
+          </div>
+          <div class="cofre-buttons">
+            <button type="button" id="btn-depositar-cofre" class="btn-cofre btn-depositar">📥 Guardar no Cofre</button>
+            <button type="button" id="btn-resgatar-cofre" class="btn-cofre btn-resgatar">📤 Resgatar p/ Saldo</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- FORMULÁRIO DE LANÇAMENTO -->
     <section class="content-card">
       <h2>Novo Lançamento</h2>
       <form id="transacao-form">
         <div class="form-grid">
           <div class="form-group">
             <label for="descricao">Descrição</label>
-            <input type="text" id="descricao" placeholder="Ex: Salário, Mercado" required />
+            <input type="text" id="descricao" list="opcoes-descricao" placeholder="Ex: Salário, Aluguel, Transporte..." required autocomplete="off" />
+            <datalist id="opcoes-descricao">
+              <option value="Salário"></option>
+              <option value="Aluguel"></option>
+              <option value="Compra"></option>
+              <option value="Transporte"></option>
+              <option value="Mercado"></option>
+              <option value="Lazer"></option>
+              <option value="Saúde"></option>
+              <option value="Educação"></option>
+              <option value="Serviços / Freelance"></option>
+              <option value="Investimentos"></option>
+            </datalist>
           </div>
           <div class="form-group">
-            <label for="valor">Valor (R$)</label>
-            <input type="number" id="valor" step="0.01" placeholder="0.00" required />
+            <label for="valor">Valor</label>
+            <input type="text" id="valor" inputmode="numeric" placeholder="R$ 0,00" required />
           </div>
           <div class="form-group">
             <label for="tipo">Tipo</label>
@@ -52,7 +135,8 @@
       </form>
     </section>
 
-    <section class="content-card">
+    <!-- PAINEL ANALÍTICO -->
+    <section class="content-card" id="secao-grafico">
       <div class="chart-header">
         <h2>Painel Analítico de Lançamentos</h2>
         <div class="chart-actions">
@@ -66,10 +150,53 @@
       </div>
     </section>
 
+    <!-- HISTÓRICO DE TRANSAÇÕES -->
     <section class="content-card">
       <h2>Histórico de Transações</h2>
       <ul id="lista-transacoes"></ul>
     </section>
+  </div>
+
+  <!-- TEMPLATE OCULTO PARA IMPRESSÃO DE PDF EM TABELA -->
+  <div id="pdf-template-tabela" class="pdf-template">
+    <div class="pdf-header">
+      <h1>Relatório Financeiro</h1>
+      <p id="pdf-data-geracao"></p>
+    </div>
+
+    <div class="pdf-summary-box">
+      <div class="pdf-summary-item">
+        <span>Receitas Totais:</span>
+        <strong id="pdf-total-receitas">R$ 0,00</strong>
+      </div>
+      <div class="pdf-summary-item">
+        <span>Despesas Totais:</span>
+        <strong id="pdf-total-despesas">R$ 0,00</strong>
+      </div>
+      <div class="pdf-summary-item">
+        <span>Reserva no Cofre:</span>
+        <strong id="pdf-total-cofre">R$ 0,00</strong>
+      </div>
+      <div class="pdf-summary-item">
+        <span>Saldo Livre Disponível:</span>
+        <strong id="pdf-saldo-livre">R$ 0,00</strong>
+      </div>
+    </div>
+
+    <h2>Detalhamento de Entradas, Saídas e Movimentações</h2>
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Descrição</th>
+          <th>Tipo</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-tabela-corpo">
+        <!-- Preenchido dinamicamente via JavaScript -->
+      </tbody>
+    </table>
   </div>
 
   <script type="module" src="main.js"></script>
