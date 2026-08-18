@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestão Financeira</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
@@ -12,7 +13,6 @@
       <h1>💰 Gestão Financeira</h1>
     </header>
 
-    <!-- Resumo no topo (3 Cards Lado a Lado) -->
     <section class="summary-grid">
       <div class="summary-card card-receita">
         <span class="card-label">RECEITAS</span>
@@ -28,7 +28,6 @@
       </div>
     </section>
 
-    <!-- Card: Novo Lançamento -->
     <section class="content-card">
       <h2>Novo Lançamento</h2>
       <form id="transacao-form">
@@ -53,13 +52,26 @@
       </form>
     </section>
 
-    <!-- Card: Histórico de Transações -->
+    <section class="content-card">
+      <div class="chart-header">
+        <h2>Painel Analítico de Lançamentos</h2>
+        <div class="chart-actions">
+          <button type="button" class="btn-chart-type active" data-type="bar">Barras</button>
+          <button type="button" class="btn-chart-type" data-type="line">Evolução</button>
+          <button type="button" class="btn-chart-type" data-type="doughnut">Proporção</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="graficoFinanceiro"></canvas>
+      </div>
+    </section>
+
     <section class="content-card">
       <h2>Histórico de Transações</h2>
       <ul id="lista-transacoes"></ul>
     </section>
   </div>
 
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
